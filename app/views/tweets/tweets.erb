@@ -1,10 +1,12 @@
 <table>
-<tr><th>User</th><th>Tweet</th></tr>
+<tr><th>User</th><th>Tweet</th><th>Link</th></tr>
 <% @tweets.each do |tweet| %>
     <tr><td>
-    <%= tweet.user %>
+    <%= tweet.user.username %>
     </td><td>
     <%= tweet.content %>
+    </td><td>
+    <a href="/tweets/<%= tweet.id %>">(link)</a>
     </td></tr>
 <% end %>
 </table>

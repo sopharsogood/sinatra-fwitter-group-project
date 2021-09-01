@@ -30,10 +30,11 @@ class UsersController < ApplicationController
     end
 
     post '/login' do
-        user = User.find_by(:username => params[:username])
+        user = User.find_by(username: params[:username])
         if user && user.authenticate(params[:password])
             session[:user_id] = user.id
-            redirect '/tweets/welcome'
+            session[:message] = "Login successful! Welcome, #{Helper.current_user(session).username}!"
+            redirect '/tweets'
         else
             flash[:message] = "Incorrect username or password. Login failed."
             redirect '/login'
@@ -44,7 +45,8 @@ class UsersController < ApplicationController
         user = User.new(username: params[:username], password: params[:password], email: params[:email])
         if user.save
             session[:user_id] = user.id
-            redirect '/tweets/welcome'
+            session[:message] = "Signup successful! Welcome, #{Helper.current_user(session).username}!"
+            redirect '/tweets'
         else
             flash[:message] = "An error occurred. Signup failed."
             redirect '/signup'

@@ -3,11 +3,15 @@
 <%= @tweet.content %>
 
 <% if @original_poster %>
+<br><br>
 <form action="/tweets/<%= @tweet.id %>/edit" method="GET">
-<input type="submit" name="Edit Tweet">
+<input type="submit" name="Edit Tweet" value="Edit Tweet">
 </form>
+<br>
 <form action="/tweets/<%= @tweet.id %>" method="POST">
 <input type="hidden" name="_method" value="DELETE">
-<input type="submit" name="Delete Tweet">
+<input type="submit" name="Delete Tweet" value="Delete Tweet">
 </form>
 <% end %>
+<br><br>
+<p><a href="/tweets">Back to tweet index</a></p>

@@ -3,12 +3,9 @@ class TweetsController < ApplicationController
     get '/tweets' do
         Helper.logged_in_only(session)
         @tweets = Tweet.all
+        flash[:message] = session[:message]
+        session[:message] = nil
         erb :'/tweets/tweets'
-    end
-
-    get '/tweets/welcome' do
-        flash[:message] = "Welcome, #{Helper.current_user(session).username}!"
-        redirect '/tweets'
     end
 
     get '/tweets/new' do
@@ -27,7 +24,7 @@ class TweetsController < ApplicationController
         Helper.logged_in_only(session)
         @tweet = Tweet.find_by(id: params[:id])
         if Helper.current_user(session) == @tweet.user
-            erb :'/tweets/edit'
+            erb :'/tweets/edit_tweet'
         else
             flash[:message] = "Only the original poster can edit a tweet."
             redirect '/tweets/' + params[:id]
@@ -35,12 +32,14 @@ class TweetsController < ApplicationController
     end
 
     post '/tweets/new' do
+        Helper.logged_in_only(session)
         tweet = Tweet.create(user: Helper.current_user(session), content: params[:content])
         flash[:message] = "Congratulations! Tweet posted!"
-        redirect '/tweets/' + tweet.id
+        redirect '/tweets/' + tweet.id.to_s
     end
 
     delete '/tweets/:id' do
+        Helper.logged_in_only(session)
         tweet = Tweet.find_by(id: params[:id])
         if Helper.current_user(session) == tweet.user
             tweet.destroy
@@ -50,5 +49,17 @@ class TweetsController < ApplicationController
             flash[:message] = "Only the original poster can delete a tweet."
             redirect '/tweets/' + params[:id]
         end
+    end
+
+    patch '/tweets/:id' do
+        Helper.logged_in_only(session)
+        tweet = Tweet.find_by(id: params[:id])
+        if Helper.current_user(session) == tweet.user
+            tweet.update(content: params[:content])
+            flash[:message] = "Tweet updated!"
+        else
+            flash[:message] = "Only the original poster can delete a tweet."
+        end
+        redirect '/tweets/' + params[:id]
     end
 end
