@@ -1,7 +1,7 @@
 class TweetsController < ApplicationController
 
     get '/tweets' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
         @tweets = Tweet.all
         if session[:message]
             flash[:message] = session[:message]
@@ -11,19 +11,19 @@ class TweetsController < ApplicationController
     end
 
     get '/tweets/new' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
         erb :'/tweets/new'
     end
 
     get '/tweets/:id' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
         @tweet = Tweet.find_by(id: params[:id])
         @original_poster = true if Helper.current_user(session) == @tweet.user
         erb :'/tweets/show_tweet'
     end
 
     get '/tweets/:id/edit' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
         @tweet = Tweet.find_by(id: params[:id])
         if Helper.current_user(session) == @tweet.user
             erb :'/tweets/edit_tweet'
@@ -34,14 +34,18 @@ class TweetsController < ApplicationController
     end
 
     post '/tweets/new' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
+        if params[:content] == ""
+            flash[:message] = "Can't make a tweet blank!"
+            redirect '/tweets/new'
+        end
         tweet = Tweet.create(user: Helper.current_user(session), content: params[:content])
         flash[:message] = "Congratulations! Tweet posted!"
         redirect '/tweets/' + tweet.id.to_s
     end
 
     delete '/tweets/:id' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
         tweet = Tweet.find_by(id: params[:id])
         if Helper.current_user(session) == tweet.user
             tweet.destroy
@@ -54,7 +58,11 @@ class TweetsController < ApplicationController
     end
 
     patch '/tweets/:id' do
-        Helper.logged_in_only(session)
+        redirect '/login' if !Helper.logged_in?(session)
+        if params[:content] == ""
+            flash[:message] = "Can't make a tweet blank!"
+            redirect '/tweets/' + params[:id] + '/edit'
+        end
         tweet = Tweet.find_by(id: params[:id])
         if Helper.current_user(session) == tweet.user
             tweet.update(content: params[:content])

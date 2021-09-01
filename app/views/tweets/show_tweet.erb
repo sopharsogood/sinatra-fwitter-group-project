@@ -2,16 +2,14 @@
 
 <%= @tweet.content %>
 
-<% if @original_poster %>
 <br><br>
 <form action="/tweets/<%= @tweet.id %>/edit" method="GET">
-<input type="button" value="Edit Tweet" id="Edit Tweet">
+<input type="submit" value="Edit Tweet" id="Edit Tweet">
 </form>
 <br>
 <form action="/tweets/<%= @tweet.id %>" method="POST">
-<input type="hidden" name="_method" value="DELETE">
-<input type="button" value="Delete Tweet" id="Delete Tweet">
+<input type="hidden" id="hidden" name="_method" value="DELETE">
+<input type="submit" value="Delete Tweet" id="Delete Tweet">
 </form>
-<% end %>
 <br><br>
 <p><a href="/tweets">Back to tweet index</a></p>

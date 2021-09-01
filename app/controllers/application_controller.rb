@@ -27,7 +27,7 @@ class ApplicationController < Sinatra::Base
 
     def self.logged_in_only(session)
       if !Helper.logged_in?(session)
-        flash[:message] = "You must be logged in to view tweets!"
+        # flash[:message] = "You must be logged in to view tweets!"
         redirect '/'
       end
     end
