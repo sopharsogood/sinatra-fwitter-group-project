@@ -3,8 +3,10 @@ class TweetsController < ApplicationController
     get '/tweets' do
         Helper.logged_in_only(session)
         @tweets = Tweet.all
-        flash[:message] = session[:message]
-        session[:message] = nil
+        if session[:message]
+            flash[:message] = session[:message]
+            session[:message] = nil
+        end
         erb :'/tweets/tweets'
     end
 
