@@ -1,0 +1,13 @@
+<h3>Posted by <%= @tweet.user.username %>:</h3>
+
+<%= @tweet.content %>
+
+<% if @original_poster %>
+<form action="/tweets/<%= @tweet.id %>/edit" method="GET">
+<input type="submit" name="Edit Tweet">
+</form>
+<form action="/tweets/<%= @tweet.id %>" method="POST">
+<input type="hidden" name="_method" value="DELETE">
+<input type="submit" name="Delete Tweet">
+</form>
+<% end %>
