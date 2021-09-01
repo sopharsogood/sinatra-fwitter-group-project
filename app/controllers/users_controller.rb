@@ -21,11 +21,8 @@ class UsersController < ApplicationController
             flash[:message] = "You're already logged out!"
             redirect '/login'
         end
-        erb :'/users/logout'
-    end
-
-    post '/logout' do
-        session.clear
+        session[:user_id] = nil
+        flash[:message] = "Logout successful!"
         redirect '/login'
     end
 
